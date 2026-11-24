@@ -1,0 +1,19 @@
+services:
+  sediment:
+    build: .
+    ports:
+      - "8000:8000"
+    environment:
+      SEDIMENT_DB: /data/sediment.db
+    volumes:
+      - sediment-data:/data
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/healthz')"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+
+volumes:
+  sediment-data:
